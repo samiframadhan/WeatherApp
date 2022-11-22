@@ -1,0 +1,40 @@
+﻿@page "/"
+@using WeatherApp.Data
+@inject CurrentWeatherServices CurrentWeather
+<PageTitle>Index</PageTitle>
+
+<h1>Hello, world!</h1>
+
+<p>Welcome to your new app.</p>
+
+@if (string.IsNullOrEmpty(city)) {
+	<input placeholder="Insert a city here" type="text" @bind="@cityTemporary"/>
+	<button @onclick="LoadWeather">Submit</button>
+	<p>@city</p>
+}
+else
+{
+	@using WeatherApp.Pages.WeatherCard;
+	@if (thisWeather == null)
+	{
+		<p>Loading ...</p>
+	}
+	else {
+		<Weather forecast="@thisWeather" />
+	}
+}
+
+@code{
+	private WeatherData thisWeather;
+	public string city;
+	public string cityTemporary;
+	
+	private async Task LoadWeather(){
+		if(!string.IsNullOrWhiteSpace(cityTemporary)){
+			city = $"{cityTemporary}";
+			cityTemporary = string.Empty;
+			Console.WriteLine(city);
+			thisWeather = await CurrentWeather.GetCurrentWeather(city);
+		}
+	}
+}

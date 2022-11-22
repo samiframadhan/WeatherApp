@@ -1,0 +1,35 @@
+﻿<p>@forecast.city.name</p>
+
+<div class="row" style="overflow-x:scroll;">
+	@foreach (var cuaca in forecast.list)
+	{
+		@*<div class="col-sm-4">*@
+			<div class="card text-center" style="width: 20rem; margin: 1rem 1rem 1rem">
+				<div class="card-body">
+					<img src="https://openweathermap.org/img/wn/@cuaca.weather[0].icon@@2x.png" class="card-img" style="max-width:fit-content" @key=@cuaca/>
+					<h5 class="card-title">@cuaca.weather[0].description</h5>
+					<h6 class="card-text">@cuaca.main.temp oC</h6>
+					<h6 class="card-text">@cuaca.main.humidity %</h6>
+					<h6 class="card-text">@cuaca.main.pressure Pa</h6>
+					<p class="card-footer">@UnixtoDate(cuaca.dt)</p>
+				</div>
+			</div>
+		@*</div>*@
+	}
+</div>
+
+@code {
+	[Parameter]
+	public WeatherApp.Data.WeatherForecast.Forecast forecast { get; set; }
+	public UriBuilder uri = new UriBuilder("https://openweathermap.org/img/wn");
+	private List<WeatherApp.Data.WeatherForecast.List> list;
+	private double timestamp;
+	private DateTime dateTime;
+
+	private string UnixtoDate(double unix)
+	{
+		dateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0);
+		dateTime = dateTime.AddSeconds(unix);
+		return dateTime.ToShortDateString() + " " + dateTime.ToShortTimeString();
+	}
+}

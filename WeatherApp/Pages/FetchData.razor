@@ -1,0 +1,50 @@
+﻿@page "/fetchdata"
+
+<PageTitle>Weather forecast</PageTitle>
+
+@using WeatherApp.Pages.WeatherCard
+@using WeatherApp.Data
+@inject CurrentWeatherServices WeatherService
+
+<h1>Weather forecast</h1>
+
+<p>This component demonstrates fetching data from a service.</p>
+
+@if (forecasts == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    @if(forecasts == null)
+    {
+        <p>Loading ...</p>
+    }
+    else
+    {
+        <Weather forecast="@forecasts"/>
+    }
+}
+
+@code {
+    private WeatherData forecasts;
+    private double Temperature;
+    private int Humid;
+    private int Press;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            forecasts = await WeatherService.GetCurrentWeather("Bandung");
+            Temperature = forecasts.main.temp;
+            Humid = forecasts.main.humidity;
+            Press = forecasts.main.pressure;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message.ToString());
+        }
+    }
+}

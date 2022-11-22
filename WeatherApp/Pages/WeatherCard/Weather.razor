@@ -1,0 +1,21 @@
+﻿<div class="card-mb2">
+	<img src=@uri/>
+	<div class="card-body">@forecast.name</div>
+	<p>, temp is: @forecast.main.temp oC</p>
+	<p>, humidity is: @forecast.main.humidity %</p>
+	<p>, pressure is: @forecast.main.pressure Pa</p>
+</div>
+
+@code {
+	[Parameter]
+	public WeatherApp.Data.WeatherData forecast { get; set; }
+	UriBuilder uri = new UriBuilder("https://openweathermap.org/img/wn");
+
+	protected override async Task OnInitializedAsync()
+	{
+		if(forecast != null)
+		{
+			uri.Path = uri.Path + $"/{forecast.weather[0].icon}" + "@2x.png";
+		}
+	}
+}
